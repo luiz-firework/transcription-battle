@@ -15,6 +15,23 @@ DEFAULT = "\033[0m"
 PURPLE = "\033[95m"
 RED = "\033[91m"
 
+OPTIONS = LiveOptions(
+    model="nova-2",
+    language="en-US",
+    # Apply smart formatting to the output
+    smart_format=True,
+    # Raw audio format details
+    encoding="linear16",
+    channels=1,
+    sample_rate=16000,
+    # To get UtteranceEnd, the following must be set:
+    interim_results=True,
+    utterance_end_ms="1000",
+    vad_events=True,
+    # Time in milliseconds of silence to wait for before finalizing speech
+    endpointing=300,
+)
+
 
 def get_current_time() -> int:
     """Return Current Time in MS."""
@@ -38,22 +55,7 @@ class DeepgramTranscription:
 
         dg_connection = deepgram.listen.websocket.v("1")
         dg_connection.on(LiveTranscriptionEvents.Transcript, self.on_message)
-        options = LiveOptions(
-            model="nova-2",
-            language="en-US",
-            # Apply smart formatting to the output
-            smart_format=True,
-            # Raw audio format details
-            encoding="linear16",
-            channels=1,
-            sample_rate=16000,
-            # To get UtteranceEnd, the following must be set:
-            interim_results=True,
-            utterance_end_ms="1000",
-            vad_events=True,
-            # Time in milliseconds of silence to wait for before finalizing speech
-            endpointing=300,
-        )
+        options = OPTIONS
 
         dg_connection.start(options)
         return dg_connection
@@ -66,7 +68,7 @@ class DeepgramTranscription:
 
         # opens the audio stream and starts recording
         with audio_capture as stream:
-            # os.system("clear")
+            os.system("clear")
             print(RED + f"Listening:\n\n" + DEFAULT)
             stream.audio_input = []
             audio_generator = stream.generator()

@@ -24,3 +24,5 @@ poetry run python main.py
 ```
 
 Then just select google or deepgram and Speak! 🎤
+
+On deepgram, you can mess around with configs in `OPTIONS` inside [DeepgramTranscrption](/transcription_battle/deepgram_transcription.py)
